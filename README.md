@@ -29,4 +29,8 @@ Create the "pentestTools" folder in the "/root" directory and clone there https:
 
 Start OpenVAS services before execute the tool.
 
-To start the tool, execute the Aut0test.py file.
+
+
+User guide
+-------------------
+To start the tool, execute the Aut0test.py file and select the IP and level of scan (1 to 3).
