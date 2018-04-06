@@ -29,6 +29,8 @@ Create the "pentestTools" folder in the "/root" directory and clone there https:
 
 Start OpenVAS services before execute the tool.
 
+In OpenVAS, create the user "admin" with password "admin" or change the user and password on the scripts.
+
 
 
 User guide
