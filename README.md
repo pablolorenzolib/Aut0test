@@ -1,4 +1,4 @@
-# Aut0test
+# Aut0test Beta V0.4.18
 Framework to automatize vulnerability and gathering scans
 
 
@@ -36,3 +36,9 @@ In OpenVAS, create the user "admin" with password "admin" or change the user and
 User guide
 -------------------
 To start the tool, execute the Aut0test.py file and select the IP and level of scan (1 to 3).
+
+
+
+
+----------------------
+Keep scans simple!
