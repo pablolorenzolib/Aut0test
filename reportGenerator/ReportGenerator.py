@@ -282,9 +282,11 @@ def startReport(ipDomain, level):
 
 	document.add_page_break()
 
-	newPathAndFileName = "reportAut0test.docx"
-	#Delete file if exists
-	if os.path.isfile(newPathAndFileName):
-		os.remove(newPathAndFileName)
+	newPathAndFileName = "/root/Desktop/reportAut0test.docx"
+	i = 1
+	
+	while os.path.isfile(newPathAndFileName):
+		newPathAndFileName = "/root/Desktop/reportAut0test"+i+".docx"
+		i++
 
 	document.save(newPathAndFileName)
