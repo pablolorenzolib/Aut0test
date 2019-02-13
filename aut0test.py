@@ -3,6 +3,7 @@
 
 import sys
 import os
+import socket
 from reportGenerator import ReportGenerator
 from scanners import TestSSLScript
 from scanners import SSHAuditScript
@@ -18,6 +19,70 @@ from parsers import NiktoData4ReportScript
 from parsers import WPScanData4ReportScript
 from parsers import OpenVasData4ReportScript
 
+target=''
+level=1
+
+def checkTarget():
+	try:
+		target = input("Insert the target to scan: (IP or URL. Eg: www.target.com or target.com or 123.123.123.123): ")
+		if target == '':
+			return False
+	except:
+		print ("")
+		print(chr(27)+"[0;91m"+ "Incorrect URL/IP format, try to write one of the following formats: www.domain.extension or domain.extension or 123.123.123.123" +chr(27)+"[0;m")
+		print ("")
+		return False
+
+	#Checking if it is a valid IP.
+	try:
+		socket.inet_aton(target)
+		validIP=True
+	except socket.error:
+		validIP=False
+
+	#If it is not a valid IP we will check if it is a valid URL.
+	if not validIP:
+		try:
+			ip=socket.gethostbyname(target)
+		except:
+			print ("")
+			print(chr(27)+"[0;91m"+ "Incorrect URL/IP format, try to write one of the following formats: www.domain.extension or domain.extension or 123.123.123.123" +chr(27)+"[0;m")
+			print ("")
+			return False
+	print ("")
+
+	return True
+
+
+def checkLevel():
+
+	level = input("Select the intensity level of scan from 1 to 3 (1: low, 2: medium 3: high): ")
+
+	try:
+		val = int(level)
+	except ValueError:
+		print ("")
+		print(chr(27)+"[0;91m"+ "Incorrect number, try to write 1 or 2 or 3" +chr(27)+"[0;m")
+		print ("")
+		return False
+
+	if val < 1:
+		print ("")
+		print(chr(27)+"[0;91m"+ "Incorrect number, try to write 1 or 2 or 3" +chr(27)+"[0;m")
+		print ("")
+		return False
+	if val > 3:
+		print ("")
+		print(chr(27)+"[0;91m"+ "Incorrect number, try to write 1 or 2 or 3" +chr(27)+"[0;m")
+		print ("")
+		return False
+
+	print ("")
+	return True
+
+#We need to start openvas at first, because take time to start the service.
+#os.system("openvas-start &")
+
 os.system("clear")
 print ("")
 print ("")
@@ -31,39 +96,53 @@ print ("|\t/_/  |_\__,_/ \__/ \____/ \__/ \___//____/ \__/  \t|")
 print ("|\t                                                 \t|")
 print ("+---------------------------------------------------------------+")
 print ("")
-ipDomain = input("Insert the target to scan: (IP or URL. EG: target.com or 123.123.123.123): ")
-print ("")
-print ("")
-level = input("Select the level of scan from 1 to 3: (1: lowest, 2: medium 3: high): ")
 
+fail = checkTarget()
+while not fail:
+	fail = checkTarget()
 
-#We need to start openvas at first, because take time to start the service.
-os.system("openvas-start &")
+fail = checkLevel()
+while not fail:
+	fail = checkLevel()
 
 #Here we start all the modules:
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module TestSSL..." +chr(27)+"[0;m")
 TestSSLScript.startTestSSL(ipDomain)
 print (chr(27)+"[0;92m"+ "[+] Module TestSSL finished." +chr(27)+"[0;m")
+
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module SSH-Audit..." +chr(27)+"[0;m")
 SSHAuditScript.startSSHAudit(ipDomain)
 print (chr(27)+"[0;92m"+ "[+] Module SSH-Audit finished." +chr(27)+"[0;m")
+
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module WhatWeb..." +chr(27)+"[0;m")
 WhatWebScript.startWhatWeb(ipDomain,level)
 print (chr(27)+"[0;92m"+ "[+] Module WhatWeb finished." +chr(27)+"[0;m")
+
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module Droopescan..." +chr(27)+"[0;m")
 DroopescanScript.startDroopescan(ipDomain)
 print (chr(27)+"[0;92m"+ "[+] Module Droopscan finished." +chr(27)+"[0;m")
+
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module Nikto..." +chr(27)+"[0;m")
 NiktoScript.startNikto(ipDomain,level)
 print (chr(27)+"[0;92m"+ "[+] Module Nikto finished." +chr(27)+"[0;m")
+
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module WPScan..." +chr(27)+"[0;m")
 WPScanScript.startWPScan(ipDomain,level)
 print (chr(27)+"[0;92m"+ "[+] Module WPScan finished." +chr(27)+"[0;m")
+
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module OpenVAS..." +chr(27)+"[0;m")
 OpenVasScript.startOpenVAS(ipDomain,level)
 print (chr(27)+"[0;92m"+ "[+] Module OpenVAS finished." +chr(27)+"[0;m")
 
 #Now we execute the parsers
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Parsing data from scans..." +chr(27)+"[0;m")
 TestSSLData4ReportScript.startTestSSL(ipDomain)
 WhatWebData4ReportScript.startWhatWeb(ipDomain,level)
@@ -71,9 +150,10 @@ DroopescanData4ReportScript.startDroopescan(ipDomain)
 NiktoData4ReportScript.startNikto(ipDomain,level)
 WPScanData4ReportScript.startWPScan(ipDomain,level)
 OpenVasData4ReportScript.startOpenVAS(ipDomain,level)
+print (chr(27)+"[0;92m"+ "[+] Data parsed." +chr(27)+"[0;m")
 
 #Now we generate the report
+print ("")
 print(chr(27)+"[0;94m"+ "[-] Generating report..." +chr(27)+"[0;m")
 ReportGenerator.startReport(ipDomain,level)
 print (chr(27)+"[0;92m"+ "[+] Report generated." +chr(27)+"[0;m")
-
