@@ -19,10 +19,11 @@ from parsers import NiktoData4ReportScript
 from parsers import WPScanData4ReportScript
 from parsers import OpenVasData4ReportScript
 
-target=''
+ip=''
 level=1
 
 def checkTarget():
+	target =''
 	try:
 		target = input("Insert the target to scan: (IP or URL. Eg: www.target.com or target.com or 123.123.123.123): ")
 		if target == '':
@@ -34,9 +35,12 @@ def checkTarget():
 		return False
 
 	#Checking if it is a valid IP.
+	global ip
+	
 	try:
 		socket.inet_aton(target)
 		validIP=True
+		ip=target
 	except socket.error:
 		validIP=False
 
@@ -49,13 +53,12 @@ def checkTarget():
 			print(chr(27)+"[0;91m"+ "Incorrect URL/IP format, try to write one of the following formats: www.domain.extension or domain.extension or 123.123.123.123" +chr(27)+"[0;m")
 			print ("")
 			return False
-	print ("")
 
 	return True
 
 
 def checkLevel():
-
+	global level
 	level = input("Select the intensity level of scan from 1 to 3 (1: low, 2: medium 3: high): ")
 
 	try:
@@ -108,52 +111,52 @@ while not fail:
 #Here we start all the modules:
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module TestSSL..." +chr(27)+"[0;m")
-TestSSLScript.startTestSSL(ipDomain)
+TestSSLScript.startTestSSL(ip)
 print (chr(27)+"[0;92m"+ "[+] Module TestSSL finished." +chr(27)+"[0;m")
 
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module SSH-Audit..." +chr(27)+"[0;m")
-SSHAuditScript.startSSHAudit(ipDomain)
+SSHAuditScript.startSSHAudit(ip)
 print (chr(27)+"[0;92m"+ "[+] Module SSH-Audit finished." +chr(27)+"[0;m")
 
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module WhatWeb..." +chr(27)+"[0;m")
-WhatWebScript.startWhatWeb(ipDomain,level)
+WhatWebScript.startWhatWeb(ip,str(level))
 print (chr(27)+"[0;92m"+ "[+] Module WhatWeb finished." +chr(27)+"[0;m")
 
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module Droopescan..." +chr(27)+"[0;m")
-DroopescanScript.startDroopescan(ipDomain)
+DroopescanScript.startDroopescan(ip)
 print (chr(27)+"[0;92m"+ "[+] Module Droopscan finished." +chr(27)+"[0;m")
 
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module Nikto..." +chr(27)+"[0;m")
-NiktoScript.startNikto(ipDomain,level)
+NiktoScript.startNikto(ip,str(level))
 print (chr(27)+"[0;92m"+ "[+] Module Nikto finished." +chr(27)+"[0;m")
 
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module WPScan..." +chr(27)+"[0;m")
-WPScanScript.startWPScan(ipDomain,level)
+WPScanScript.startWPScan(target,str(level))
 print (chr(27)+"[0;92m"+ "[+] Module WPScan finished." +chr(27)+"[0;m")
 
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Starting module OpenVAS..." +chr(27)+"[0;m")
-OpenVasScript.startOpenVAS(ipDomain,level)
+#OpenVasScript.startOpenVAS(ip,str(level))
 print (chr(27)+"[0;92m"+ "[+] Module OpenVAS finished." +chr(27)+"[0;m")
 
 #Now we execute the parsers
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Parsing data from scans..." +chr(27)+"[0;m")
-TestSSLData4ReportScript.startTestSSL(ipDomain)
-WhatWebData4ReportScript.startWhatWeb(ipDomain,level)
-DroopescanData4ReportScript.startDroopescan(ipDomain)
-NiktoData4ReportScript.startNikto(ipDomain,level)
-WPScanData4ReportScript.startWPScan(ipDomain,level)
-OpenVasData4ReportScript.startOpenVAS(ipDomain,level)
+TestSSLData4ReportScript.startTestSSL(ip)
+WhatWebData4ReportScript.startWhatWeb(ip,str(level))
+DroopescanData4ReportScript.startDroopescan(ip)
+NiktoData4ReportScript.startNikto(ip,str(level))
+WPScanData4ReportScript.startWPScan(ip,str(level))
+OpenVasData4ReportScript.startOpenVAS(ip,str(level))
 print (chr(27)+"[0;92m"+ "[+] Data parsed." +chr(27)+"[0;m")
 
 #Now we generate the report
 print ("")
 print(chr(27)+"[0;94m"+ "[-] Generating report..." +chr(27)+"[0;m")
-ReportGenerator.startReport(ipDomain,level)
+ReportGenerator.startReport(ip,str(level))
 print (chr(27)+"[0;92m"+ "[+] Report generated." +chr(27)+"[0;m")
