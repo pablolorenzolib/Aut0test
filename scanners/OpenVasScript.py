@@ -13,6 +13,8 @@ def startOpenVAS(ipDomain,level):
 	if os.path.isfile(pathAndFileName):
 		os.remove(pathAndFileName)
 
+	#Check here the taks IDs and Targets created to delete it!!!!!
+
 	#Choosing which kind of scan we want to run depending of the level and we save it in idTypeScan:
 	cmdIdTypeScan = ""
 

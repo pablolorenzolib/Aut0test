@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
-#WPScan Beta V3 - The script works when we execute wpscan v3 from the original path.
 
 import sys
 import os
@@ -19,10 +18,10 @@ def startWPScan(ipDomain,level):
 
 	#High level
 	if level == "3":
-		os.system("/root/pentestTools/wpscan-v3/bin/wpscan --url "+ipDomain+" --enumerate u1-50,vp,tt,vt --format json --output " + pathAndFileName)
+		os.system("wpscan --url "+ipDomain+" --enumerate u1-50,vp,tt,vt --format json --output " + pathAndFileName)
 	#Medium level
 	if level == "2":
-		os.system("/root/pentestTools/wpscan-v3/bin/wpscan --url "+ipDomain+" --enumerate u1-30,vp,tt,vt --format json --output " + pathAndFileName)
+		os.system("wpscan --url "+ipDomain+" --enumerate u1-30,vp,tt,vt --format json --output " + pathAndFileName)
 	#Low level
 	if level == "1":
-		os.system("/root/pentestTools/wpscan-v3/bin/wpscan --url "+ipDomain+" --enumerate --format json --output " + pathAndFileName)
+		os.system("wpscan --url "+ipDomain+" --enumerate --format json --output " + pathAndFileName)
